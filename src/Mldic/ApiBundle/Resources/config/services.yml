@@ -1,0 +1,7 @@
+parameters:
+#    mldic_api.example.class: Mldic\ApiBundle\Example
+
+services:
+#    mldic_api.example:
+#        class: %mldic_api.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

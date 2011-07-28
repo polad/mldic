@@ -1,0 +1,29 @@
+MldicApiBundle_home:
+    pattern:  /
+    defaults: { _controller: MldicApiBundle:Default:index }
+    requirements:
+        _method: GET
+
+MldicApiBundle_entries_create:
+    pattern:  /entries/{phrase}/{language}
+    defaults: { _controller: MldicApiBundle:Entries:create }
+    requirements:
+        _method: PUT
+
+MldicApiBundle_entry_unique:
+    pattern:  /entries/{phrase}/{language}
+    defaults: { _controller: MldicApiBundle:Entries:get }
+    requirements:
+        _method: GET
+
+MldicApiBundle_entries_by_phrase:
+    pattern:  /entries/{phrase}
+    defaults: { _controller: MldicApiBundle:Entries:getByPhrase }
+    requirements:
+        _method: GET
+
+MldicApiBundle_entries_list:
+    pattern:  /entries
+    defaults: { _controller: MldicApiBundle:Entries:list }
+    requirements:
+        _method: GET
