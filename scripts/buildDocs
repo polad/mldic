@@ -1,0 +1,2 @@
+MLDIC_SCRIPTS_DIR="$(dirname "$(readlink -f ${BASH_SOURCE[0]})")"
+phpdoc -d $MLDIC_SCRIPTS_DIR/../src/Mldic/ApiBundle/ -t $MLDIC_SCRIPTS_DIR/../docs/api/ -ti "MLDictionary API Documentation" -o HTML:frames/Extjs:default -s on -i /Tests/*,/DependencyInjection/*,/MldicApiBundle.php

@@ -5,3 +5,8 @@ services:
 #    mldic_api.example:
 #        class: %mldic_api.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+
+     kernel.listener.on_kernel_view:
+         class: Mldic\ApiBundle\Helper\ResponseBuilder
+         tags:
+             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }

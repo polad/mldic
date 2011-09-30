@@ -12,18 +12,12 @@ MldicApiBundle_entries_create:
 
 MldicApiBundle_entry_unique:
     pattern:  /entries/{phrase}/{language}
-    defaults: { _controller: MldicApiBundle:Entries:get }
+    defaults: { _controller: MldicApiBundle:Entries:searchByPhraseAndLanguage }
     requirements:
         _method: GET
 
 MldicApiBundle_entries_by_phrase:
     pattern:  /entries/{phrase}
-    defaults: { _controller: MldicApiBundle:Entries:getByPhrase }
-    requirements:
-        _method: GET
-
-MldicApiBundle_entries_list:
-    pattern:  /entries
-    defaults: { _controller: MldicApiBundle:Entries:list }
+    defaults: { _controller: MldicApiBundle:Entries:searchByPhrase, phrase: null }
     requirements:
         _method: GET

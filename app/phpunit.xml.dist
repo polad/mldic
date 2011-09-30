@@ -11,6 +11,8 @@
     processIsolation            = "false"
     stopOnFailure               = "false"
     syntaxCheck                 = "false"
+    verbose                     = "true"
+    strict                      = "true"
     bootstrap                   = "bootstrap.php.cache" >
 
     <testsuites>
@@ -19,6 +21,16 @@
             <directory>../src/*/Bundle/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>
+    
+    <logging>
+      <log type="coverage-html"
+           target="/home/polad/projects/mldic4/docs/code_coverage"
+           charset="UTF-8"
+           yui="true"
+           highlight="true"/>
+      <log type="testdox-html"
+           target="/home/polad/projects/mldic4/docs/code_coverage/testdox.html"/>
+    </logging>
 
     <!--
     <php>
@@ -30,8 +42,11 @@
         <whitelist>
             <directory>../src</directory>
             <exclude>
+                <file>../src/Mldic/ApiBundle/MldicApiBundle.php</file>
+                <directory>../src/*/*Bundle/DependencyInjection</directory>
                 <directory>../src/*/*Bundle/Resources</directory>
                 <directory>../src/*/*Bundle/Tests</directory>
+                <directory>../src/*/Bundle/*Bundle/DependendencyInjection</directory>
                 <directory>../src/*/Bundle/*Bundle/Resources</directory>
                 <directory>../src/*/Bundle/*Bundle/Tests</directory>
             </exclude>
