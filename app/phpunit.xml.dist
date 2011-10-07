@@ -24,12 +24,12 @@
     
     <logging>
       <log type="coverage-html"
-           target="/home/polad/projects/mldic4/docs/code_coverage"
+           target="../docs/code_coverage"
            charset="UTF-8"
            yui="true"
            highlight="true"/>
       <log type="testdox-html"
-           target="/home/polad/projects/mldic4/docs/code_coverage/testdox.html"/>
+           target="../docs/code_coverage/testdox.html"/>
     </logging>
 
     <!--
