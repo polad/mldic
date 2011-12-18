@@ -1,21 +1,21 @@
 <?php
 namespace Mldic\ApiBundle\Tests\Unit\Orm\PDO;
 
-use Mldic\ApiBundle\Orm\PDO\EntryQueryFactory;
+use Mldic\ApiBundle\Orm\PDO\LanguageQueryFactory;
 
-class EntryQueryFactoryTest extends \PHPUnit_Framework_TestCase
+class LanguageQueryFactoryTest extends \PHPUnit_Framework_TestCase
 {
     private $queryFactory;
     
     public function setUp()
     {
-        $this->queryFactory = new EntryQueryFactory();
+        $this->queryFactory = new LanguageQueryFactory();
     }
     
     public function testShouldReturnFindByIdQuery()
     {
         // Given
-        $sql = 'SELECT * FROM entries WHERE id=:id';
+        $sql = 'SELECT * FROM languages WHERE id=:id';
         $parameters = array('id' => 1);
         
         // When
@@ -27,32 +27,28 @@ class EntryQueryFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($parameters, $query->getParameters());
     }
     
-    public function testShouldReturnFindByPhraseQuery()
+    public function testShouldReturnFindAllQuery()
     {
         // Given
-        $sql = 'SELECT * FROM entries WHERE phrase=:phrase';
-        $parameters = array('phrase' => 'abdomen');
+        $sql = 'SELECT * FROM languages';
         
         // When
-        $query = $this->queryFactory->getFindByPhraseQuery($parameters['phrase']);
+        $query = $this->queryFactory->getFindAllQuery();
         
         // Then
         $this->assertInstanceOf('Mldic\ApiBundle\Orm\PDO\Query', $query);
         $this->assertEquals($sql, $query->getSql());
-        $this->assertEquals($parameters, $query->getParameters());
+        $this->assertEmpty($query->getParameters());
     }
     
-    public function testShouldReturnFindByPhraseAndLanguageQuery()
+    public function testShouldReturnFindByCodeQuery()
     {
         // Given
-        $sql = 'SELECT e.* FROM entries AS e ' .
-               'INNER JOIN languages AS l ON l.id = e.language_id ' .
-               'WHERE phrase=:phrase AND l.code=:language';
-        $parameters = array('phrase' => 'abdomen', 'language' => 'en');
+        $sql = 'SELECT * FROM languages WHERE code=:code';
+        $parameters = array('code' => 'en');
         
         // When
-        $query = $this->queryFactory->getFindByPhraseAndLanguageQuery($parameters['phrase'],
-                                                                      $parameters['language']);
+        $query = $this->queryFactory->getFindByCodeQuery($parameters['code']);
         
         // Then
         $this->assertInstanceOf('Mldic\ApiBundle\Orm\PDO\Query', $query);

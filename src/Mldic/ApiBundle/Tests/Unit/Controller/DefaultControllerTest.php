@@ -5,7 +5,7 @@ use Mldic\ApiBundle\Controller\DefaultController;
 
 class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testShouldReturnAPIEntryPoints()
+    public function testShouldReturnApiEntryPoints()
     {
         // Given
         $controller = new DefaultController();

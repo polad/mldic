@@ -19,26 +19,60 @@ class EntryBuilder implements DomainObjectBuilderInterface
     
     /**
      * @return Entry
+     * @throws RuntimeException
      */
-    public function build(array $attributes = null)
+    public function build(array $attributes = array())
     {
-        if (isset($attributes['language'])) {
-            $language = $this->languageMapper->get($attributes['language']);
-        } else {
-            $language = $this->languageMapper->build();
+        return new Entry(isset($attributes['id']) ? $attributes['id'] : null,
+                         isset($attributes['phrase']) ? $attributes['phrase'] : null,
+                         $this->getLanguage($attributes),
+                         $this->getCreatedBy($attributes),
+                         isset($attributes['created_date']) ? $attributes['created_date'] : null,
+                         $this->getModifiedBy($attributes),
+                         isset($attributes['modified_date']) ? $attributes['modified_date'] : null);
+    }
+    
+    private function isValidId($attributes, $idName)
+    {
+        return array_key_exists($idName, $attributes)
+            && !empty($attributes[$idName]);
+    }
+    
+    private function findByIdOrBuildEmptyObject($attributes, $idName, $mapper)
+    {
+        if ($this->isValidId($attributes, $idName)) {
+            return $mapper->findById($attributes[$idName]);
         }
-        if (isset($attributes['created_by'])) {
-            $createdBy = $this->userMapper->get($attributes['created_by']);
-        } else {
-            $createdBy = $this->userMapper->build();
+        return $mapper->build();
+    }
+    
+    private function getLanguage(array $attributes)
+    {
+        if ($result = $this->findByIdOrBuildEmptyObject($attributes,
+                                                        'language_id',
+                                                        $this->languageMapper)) {
+            return $result;
         }
-        if (isset($attributes['modified_by'])) {
-            $modifiedBy = $this->userMapper->get($attributes['modified_by']);
-        } else {
-            $modifiedBy = $this->userMapper->build();
+        throw new \RuntimeException('Can not find Language with Id ' . $attributes['language_id']);
+    }
+    
+    private function getCreatedBy(array $attributes)
+    {
+        if ($result = $this->findByIdOrBuildEmptyObject($attributes,
+                                                        'created_by',
+                                                        $this->userMapper)) {
+            return $result;
         }
-        return new Entry($attributes['id'], $attributes['phrase'], $language,
-                         $createdBy, $attributes['created_date'],
-                         $modifiedBy, $attributes['modified_date']);
+        throw new \RuntimeException('Can not find User with Id ' . $attributes['created_by']);
+    }
+    
+    private function getModifiedBy(array $attributes)
+    {
+        if ($result = $this->findByIdOrBuildEmptyObject($attributes,
+                                                        'modified_by',
+                                                        $this->userMapper)) {
+            return $result;
+        }
+        throw new \RuntimeException('Can not find User with Id ' . $attributes['modified_by']);
     }
 }

@@ -27,6 +27,8 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Mldic\ApiBundle\Model\User', $user);
         $this->assertEquals($attributes['id'], $user->getId());
         $this->assertEquals($attributes['username'], $user->getUsername());
+        $this->assertEquals($attributes['first_name'], $user->getFirstName());
+        $this->assertEquals($attributes['last_name'], $user->getLastName());
     }
     
     public function testShouldBuildEmptyUserObjectIfNoAttributesProvided()
@@ -38,6 +40,8 @@ class UserBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Mldic\ApiBundle\Model\User', $user);
         $this->assertNull($user->getId());
         $this->assertNull($user->getUsername());
+        $this->assertNull($user->getFirstName());
+        $this->assertNull($user->getLastName());
     }
 }
 

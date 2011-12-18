@@ -4,11 +4,11 @@
  */
 namespace Mldic\ApiBundle\Orm;
 
-class DataMapper
+abstract class DataMapper
 {
     private $dataAccess;
     private $domainObjectBuilder;
-    private $queryFactory;
+    protected $queryFactory;
     
     public function __construct(DataAccessInterface $dataAccess,
                                 DomainObjectBuilderInterface $domainObjectBuilder,
@@ -19,24 +19,14 @@ class DataMapper
         $this->queryFactory = $queryFactory;
     }
     
-    public function all(array $conditions = null)
+    public function findById($id)
     {
-        if (empty($conditions)) {
-            $query = $this->queryFactory->findAll();
-        } else {
-            $query = $this->queryFactory->findWithConditions($conditions);
-        }
-        return $this->processQuery($query);
-    }
-    
-    public function get($id)
-    {
-        $query = $this->queryFactory->findById($id);
+        $query = $this->queryFactory->getFindByIdQuery($id);
         $result = $this->processQuery($query);
         return count($result) ? $result[0] : null;
     }
     
-    private function processQuery(QueryInterface $query)
+    protected function processQuery(QueryInterface $query)
     {
         $result = array();
         $dataSet = $this->dataAccess->execute($query);

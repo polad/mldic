@@ -7,15 +7,15 @@ use Symfony\Component\DependencyInjection\Container;
 class EntriesControllerTest extends \PHPUnit_Framework_TestCase
 {
     private $controller;
-    private $datamapper;
+    private $dataMapper;
     
     public function setUp()
     {
-        $this->datamapper = $this->getMockBuilder('Mldic\ApiBundle\Orm\DataMapper')
+        $this->dataMapper = $this->getMockBuilder('Mldic\ApiBundle\Orm\EntryMapper')
             ->disableOriginalConstructor()->getMock();
         
         $container = new Container();
-        $container->set('datamapper.entry', $this->datamapper);
+        $container->set('datamapper.entry', $this->dataMapper);
         
         $this->controller = new EntriesController();
         $this->controller->setContainer($container);
@@ -30,13 +30,13 @@ class EntriesControllerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $entries = array($entry);
         
-        $this->datamapper->expects($this->once())
-            ->method('all')
-            ->with(array('phrase' => $searchPhrase))
+        $this->dataMapper->expects($this->once())
+            ->method('findByPhrase')
+            ->with($searchPhrase)
             ->will($this->returnValue($entries));
         
         // When
-        $foundEntries = $this->controller->searchByPhraseAction($searchPhrase);
+        $foundEntries = $this->controller->findByPhraseAction($searchPhrase);
         
         // Then
         $this->assertGreaterThanOrEqual(1, count($foundEntries));
@@ -49,13 +49,13 @@ class EntriesControllerTest extends \PHPUnit_Framework_TestCase
         // Given
         $searchPhrase = 'abdomen';
         
-        $this->datamapper->expects($this->once())
-            ->method('all')
-            ->with(array('phrase' => $searchPhrase))
+        $this->dataMapper->expects($this->once())
+            ->method('findByPhrase')
+            ->with($searchPhrase)
             ->will($this->returnValue(array()));
         
         // When
-        $entries = $this->controller->searchByPhraseAction($searchPhrase);
+        $entries = $this->controller->findByPhraseAction($searchPhrase);
         
         // Then
         $this->assertEmpty($entries);
@@ -70,13 +70,13 @@ class EntriesControllerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         
-        $this->datamapper->expects($this->once())
-            ->method('all')
-            ->with(array('phrase' => $phrase, 'language' => $language))
-            ->will($this->returnValue(array($entry)));
+        $this->dataMapper->expects($this->once())
+            ->method('findByPhraseAndLanguage')
+            ->with($phrase, $language)
+            ->will($this->returnValue($entry));
         
         // When
-        $foundEntry = $this->controller->searchByPhraseAndLanguageAction($phrase, $language);
+        $foundEntry = $this->controller->findByPhraseAndLanguageAction($phrase, $language);
         
         // Then
         $this->assertSame($entry, $foundEntry);
@@ -88,14 +88,14 @@ class EntriesControllerTest extends \PHPUnit_Framework_TestCase
         $phrase = 'abdomen';
         $language = 'en';
         
-        $this->datamapper->expects($this->once())
-            ->method('all')
-            ->with(array('phrase' => $phrase, 'language' => $language))
-            ->will($this->returnValue(array()));
+        $this->dataMapper->expects($this->once())
+            ->method('findByPhraseAndLanguage')
+            ->with($phrase, $language)
+            ->will($this->returnValue(null));
         
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         
         // When
-        $foundEntry = $this->controller->searchByPhraseAndLanguageAction($phrase, $language);
+        $foundEntry = $this->controller->findByPhraseAndLanguageAction($phrase, $language);
     }
 }

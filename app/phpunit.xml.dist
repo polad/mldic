@@ -14,7 +14,16 @@
     verbose                     = "true"
     strict                      = "true"
     bootstrap                   = "bootstrap.php.cache" >
-
+    
+    <php>
+        <server name="APPLICATION_ENV" value="test"/>
+        <const name="TEST_DB_SQL_FILE" value="db/test_mldic.sql"/>
+        <server name="SYMFONY__DATABASE__HOST" value="localhost"/>
+        <server name="SYMFONY__DATABASE__NAME" value="test_mldic"/>
+        <server name="SYMFONY__DATABASE__USER" value="test_mldic_user"/>
+        <server name="SYMFONY__DATABASE__PASSWORD" value="welcome"/>
+    </php>
+    
     <testsuites>
         <testsuite name="Project Test Suite">
             <directory>../src/*/*Bundle/Tests</directory>

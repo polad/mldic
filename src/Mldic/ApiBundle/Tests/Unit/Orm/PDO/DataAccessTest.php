@@ -28,9 +28,9 @@ class DataAccessTest extends \PHPUnit_Framework_TestCase
         $stmt->expects($this->once())
             ->method('execute');
         
-        $stmt->expects($this->exactly(3))
+        $stmt->expects($this->exactly(2))
             ->method('fetch')
-            ->will($this->onConsecutiveCalls(array('id'), array('id'), null));
+            ->will($this->onConsecutiveCalls(array('id'), null));
         
         // When
         $dataSet = $dataAccess->execute($query);

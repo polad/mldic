@@ -8,7 +8,7 @@ class UserMapper extends DataMapper
 {
     public function __construct(DataAccessInterface $dataAccess,
                                 UserBuilder $domainObjectBuilder,
-                                QueryFactoryInterface $queryFactory)
+                                UserQueryFactoryInterface $queryFactory)
     {
         parent::__construct($dataAccess,
                             $domainObjectBuilder,

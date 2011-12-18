@@ -5,50 +5,27 @@
  */
 namespace Mldic\ApiBundle\Orm\PDO;
 
-use Mldic\ApiBundle\Orm\QueryFactoryInterface;
+use Mldic\ApiBundle\Orm\EntryQueryFactoryInterface;
 
-class EntryQueryFactory implements QueryFactoryInterface
+class EntryQueryFactory implements EntryQueryFactoryInterface
 {
-    public function findAll()
-    {
-        return new Query('SELECT * FROM entries');
-    }
-    
-    public function findWithConditions(array $conditions)
-    {
-        foreach ($conditions as $cond) {
-            $this->parseCondition($cond);
-        }
-    }
-    
-    public function findById($id)
+    public function getFindByIdQuery($id)
     {
         return new Query('SELECT * FROM entries WHERE id=:id',
                          array('id' => $id));
     }
     
-    public function parseCondition($condition)
+    public function getFindByPhraseQuery($phrase)
     {
-        if (count($condition) == 3) {
-            list($field, $comparator, $value) = $condition;
-        } elseif (count($condition) == 2) {
-            $comparator = 'eq';
-            list($field, $value) = $condition;
-        } elseif (count($condition) == 1) {
-            $field = key($condition[0]);
-            $relatedQueryFactory = $this->getRelatedQueryFactory($field);
-            $relatedQueryFactory->parseCondition($condition);
-        }
+        return new Query('SELECT * FROM entries WHERE phrase=:phrase',
+                         array('phrase' => $phrase));
     }
     
-    private function getRelatedQueryFactory($field)
+    public function getFindByPhraseAndLanguageQuery($phrase, $language)
     {
-        switch ($field) {
-        case 'language':
-            return $this->languageQueryFactory;
-        case 'created_by':
-        case 'modified_by':
-            return $this->userQueryFactory;
-        }
+        return new Query('SELECT e.* FROM entries AS e ' .
+                         'INNER JOIN languages AS l ON l.id = e.language_id ' .
+                         'WHERE phrase=:phrase AND l.code=:language',
+                         array('phrase' => $phrase, 'language' => $language));
     }
 }

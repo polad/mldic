@@ -54,4 +54,15 @@ class Entry extends DomainObject
     {
         return $this->modifiedDate;
     }
+    
+    public function toArray()
+    {
+        return array_merge(parent::toArray(),
+                           array('phrase' => $this->getPhrase(),
+                                 'language' => $this->getLanguage()->toArray(),
+                                 'createdBy' => $this->getCreatedBy()->toArray(),
+                                 'createdDate' => $this->getCreatedDate(),
+                                 'modifiedBy' => $this->getModifiedBy()->toArray(),
+                                 'modifiedDate' => $this->getModifiedDate()));
+    }
 }

@@ -2,11 +2,46 @@ parameters:
 #    mldic_api.example.class: Mldic\ApiBundle\Example
 
 services:
-#    mldic_api.example:
-#        class: %mldic_api.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    kernel.listener.on_kernel_view:
+        class: Mldic\ApiBundle\Helper\ResponseBuilder
+        tags:
+            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
+    
+    pdo:
+        class: PDO
+        arguments: ["mysql:host=%database.host%;dbname=%database.name%", %database.user%, %database.password%]
+    
+    data_access:
+        class:     Mldic\ApiBundle\Orm\PDO\DataAccess
+        arguments: [@pdo]
+    
+    domain_object_builder.language:
+        class:     Mldic\ApiBundle\Orm\LanguageBuilder
+    
+    query_factory.language:
+        class:     Mldic\ApiBundle\Orm\PDO\LanguageQueryFactory
+    
+    data_mapper.language:
+        class:     Mldic\ApiBundle\Orm\LanguageMapper
+        arguments: [@data_access, @domain_object_builder.language, @query_factory.language]
+    
+    domain_object_builder.user:
+        class:     Mldic\ApiBundle\Orm\UserBuilder
+    
+    query_factory.user:
+        class:     Mldic\ApiBundle\Orm\PDO\UserQueryFactory
+    
+    data_mapper.user:
+        class:     Mldic\ApiBundle\Orm\UserMapper
+        arguments: [@data_access, @domain_object_builder.user, @query_factory.user]
+    
+    domain_object_builder.entry:
+        class:     Mldic\ApiBundle\Orm\EntryBuilder
+        arguments: [@data_mapper.language, @data_mapper.user]
+    
+    query_factory.entry:
+        class:     Mldic\ApiBundle\Orm\PDO\EntryQueryFactory
 
-     kernel.listener.on_kernel_view:
-         class: Mldic\ApiBundle\Helper\ResponseBuilder
-         tags:
-             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
+    data_mapper.entry:
+        class:     Mldic\ApiBundle\Orm\EntryMapper
+        arguments: [@data_access, @domain_object_builder.entry, @query_factory.entry]

@@ -19,9 +19,9 @@ class DataAccess implements DataAccessInterface
     
     public function execute(QueryInterface $query)
     {
-        $strSql = $query->getSql();
+        $sql = $query->getSql();
         $params = $query->getParameters();
-        $stmt = $this->dbh->prepare($strSql);
+        $stmt = $this->dbh->prepare($sql);
         $stmt->execute($params);
         $dataSet = array();
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {

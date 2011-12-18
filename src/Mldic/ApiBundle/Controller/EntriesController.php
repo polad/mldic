@@ -6,18 +6,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class EntriesController extends Controller
 {
-    public function searchByPhraseAction($phrase = null)
+    public function findByPhraseAction($phrase = null)
     {
-        return $this->get('datamapper.entry')->all(array('phrase' => $phrase));
+        return $this->get('datamapper.entry')->findByPhrase($phrase);
     }
     
-    public function searchByPhraseAndLanguageAction($phrase, $language)
+    public function findByPhraseAndLanguageAction($phrase, $language)
     {
-        $entries = $this->get('datamapper.entry')->all(array('phrase' => $phrase,
-                                                           'language' => $language));
-        if (empty($entries)) {
+        $entry = $this->get('datamapper.entry')->findByPhraseAndLanguage($phrase, $language);
+        if (empty($entry)) {
             throw new NotFoundHttpException('Entry not found!');
         }
-        return $entries[0];
+        return $entry;
     }
 }

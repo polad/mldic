@@ -25,4 +25,11 @@ class Language extends DomainObject
     {
         return $this->name;
     }
+    
+    public function toArray()
+    {
+        return array_merge(parent::toArray(),
+                           array('code' => $this->getCode(),
+                                 'name' => $this->getName()));
+    }
 }

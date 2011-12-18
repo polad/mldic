@@ -4,7 +4,7 @@
  */
 namespace Mldic\ApiBundle\Model;
 
-class DomainObject
+class DomainObject implements ConvertibleToArray
 {
     private $id;
     
@@ -16,5 +16,10 @@ class DomainObject
     public function getId()
     {
         return $this->id;
+    }
+    
+    public function toArray()
+    {
+        return array('id' => $this->getId());
     }
 }

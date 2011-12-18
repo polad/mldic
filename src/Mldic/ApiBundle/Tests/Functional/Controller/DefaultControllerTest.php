@@ -1,17 +1,24 @@
 <?php
-
-namespace Mldic\ApiBundle\Tests\Controller;
+namespace Mldic\ApiBundle\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndex()
+    public function testShouldReturnApiEntryPoints()
     {
-        /* $client = static::createClient(); */
-
-        /* $crawler = $client->request('GET', '/hello/Fabien'); */
-
-        /* $this->assertTrue($crawler->filter('html:contains("Hello Fabien")')->count() > 0); */
+        // Given
+        $expectedResponse = array('entries' => array('link' => array('href' => '/entries')),
+                                  'languages' => array('link' => array('href' => '/languages')),
+                                  'users' => array('link' => array('href' => '/users')));
+        
+        $client = static::createClient();
+        
+        // When
+        $crawler = $client->request('GET', '/');
+        
+        // Then
+        //$this->assertTrue($crawler->filter('html:contains("Hello Fabien")')->count() > 0);
+        $this->assertEquals($expectedResponse, json_decode($client->getResponse()->getContent(), true));
     }
 }

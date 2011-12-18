@@ -35,4 +35,12 @@ class User extends DomainObject
     {
         return $this->lastName;
     }
+    
+    public function toArray()
+    {
+        return array_merge(parent::toArray(),
+                           array('username' => $this->getUsername(),
+                                 'firstName' => $this->getFirstName(),
+                                 'lastName' => $this->getLastName()));
+    }
 }
