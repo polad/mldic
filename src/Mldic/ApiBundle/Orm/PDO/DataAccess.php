@@ -15,6 +15,7 @@ class DataAccess implements DataAccessInterface
     public function __construct(\PDO $dbh)
     {
         $this->dbh = $dbh;
+        $this->dbh->exec('SET NAMES utf8');
     }
     
     public function execute(QueryInterface $query)
