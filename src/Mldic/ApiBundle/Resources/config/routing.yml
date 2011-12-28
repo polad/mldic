@@ -10,9 +10,23 @@ MldicApiBundle_entries_create:
     requirements:
         _method: PUT
 
-MldicApiBundle_entry_unique:
+MldicApiBundle_entries_similar_by_phrase_language:
     pattern: /entries/{phrase}/{language}
     defaults: { _controller: MldicApiBundle:Entries:findByPhraseAndLanguage }
+    requirements:
+        _method: GET
+        phrase: ^\~.*$
+
+MldicApiBundle_entries_by_partial_phrase_language:
+    pattern: /entries/{phrase}/{language}
+    defaults: { _controller: MldicApiBundle:Entries:findByPhraseAndLanguage }
+    requirements:
+        _method: GET
+        phrase: ^.*\*.*$
+
+MldicApiBundle_entry_unique:
+    pattern: /entries/{phrase}/{language}
+    defaults: { _controller: MldicApiBundle:Entries:findUniqueByPhraseAndLanguage }
     requirements:
         _method: GET
 

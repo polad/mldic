@@ -25,43 +25,16 @@ class EntriesControllerTest extends \PHPUnit_Framework_TestCase
     {
         // Given
         $searchPhrase = 'abdomen';
-        $entry = $this->getMockBuilder('Mldic\ApiBundle\Model\Entry')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $entries = array($entry);
         
         $this->dataMapper->expects($this->once())
             ->method('findByPhrase')
-            ->with($searchPhrase)
-            ->will($this->returnValue($entries));
+            ->with($searchPhrase);
         
         // When
-        $foundEntries = $this->controller->findByPhraseAction($searchPhrase);
-        
-        // Then
-        $this->assertGreaterThanOrEqual(1, count($foundEntries));
-        // And
-        $this->assertEquals($entries, $foundEntries);
+        $this->controller->findByPhraseAction($searchPhrase);
     }
     
-    public function testShouldNotFindEntriesByPhrase()
-    {
-        // Given
-        $searchPhrase = 'abdomen';
-        
-        $this->dataMapper->expects($this->once())
-            ->method('findByPhrase')
-            ->with($searchPhrase)
-            ->will($this->returnValue(array()));
-        
-        // When
-        $entries = $this->controller->findByPhraseAction($searchPhrase);
-        
-        // Then
-        $this->assertEmpty($entries);
-    }
-    
-    public function testShouldFindEntryByPhraseAndLanguage()
+    public function testShouldFindUniqueEntryByPhraseAndLanguage()
     {
         // Given
         $phrase = 'abdomen';
@@ -73,16 +46,16 @@ class EntriesControllerTest extends \PHPUnit_Framework_TestCase
         $this->dataMapper->expects($this->once())
             ->method('findByPhraseAndLanguage')
             ->with($phrase, $language)
-            ->will($this->returnValue($entry));
+            ->will($this->returnValue(array($entry)));
         
         // When
-        $foundEntry = $this->controller->findByPhraseAndLanguageAction($phrase, $language);
+        $foundEntry = $this->controller->findUniqueByPhraseAndLanguageAction($phrase, $language);
         
         // Then
         $this->assertSame($entry, $foundEntry);
     }
     
-    public function testShouldNotFindEntryByPhraseAndLanguage()
+    public function testShouldNotFindUniqueEntryByPhraseAndLanguage()
     {
         // Given
         $phrase = 'abdomen';
@@ -96,6 +69,62 @@ class EntriesControllerTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         
         // When
-        $foundEntry = $this->controller->findByPhraseAndLanguageAction($phrase, $language);
+        $foundEntry = $this->controller->findUniqueByPhraseAndLanguageAction($phrase, $language);
+    }
+    
+    public function testShouldFindEntriesByPartialPhrase()
+    {
+        // Given
+        $phrase = 'abd*en';
+        $normalizedPhrase = str_replace('*', '%', $phrase);
+        
+        $this->dataMapper->expects($this->once())
+            ->method('findByPhrase')
+            ->with($normalizedPhrase);
+        
+        // When
+        $this->controller->findByPhraseAction($phrase);
+    }
+    
+    public function testShouldFindEntriesByPartialPhraseAndLanguage()
+    {
+        // Given
+        $phrase = 'abd*en';
+        $normalizedPhrase = str_replace('*', '%', $phrase);
+        $language = 'en';
+        
+        $this->dataMapper->expects($this->once())
+            ->method('findByPhraseAndLanguage')
+            ->with($normalizedPhrase, $language);
+        
+        // When
+        $this->controller->findByPhraseAndLanguageAction($phrase, $language);
+    }
+    
+    public function testShouldFindSimilarEntriesByPhrase()
+    {
+        // Given
+        $phrase = '~abdumen';
+        
+        $this->dataMapper->expects($this->once())
+            ->method('findByPhrase')
+            ->with($phrase);
+        
+        // When
+        $this->controller->findByPhraseAction($phrase);
+    }
+    
+    public function testShouldFindSimilarEntriesByPhraseAndLanguage()
+    {
+        // Given
+        $phrase = '~abdumen';
+        $language = 'en';
+        
+        $this->dataMapper->expects($this->once())
+            ->method('findByPhraseAndLanguage')
+            ->with($phrase, $language);
+        
+        // When
+        $this->controller->findByPhraseAndLanguageAction($phrase, $language);
     }
 }
