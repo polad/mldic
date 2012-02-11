@@ -59,10 +59,10 @@ class Entry extends DomainObject
     {
         return array_merge(parent::toArray(),
                            array('phrase' => $this->getPhrase(),
-                                 'language' => $this->getLanguage()->toArray(),
-                                 'createdBy' => $this->getCreatedBy()->toArray(),
+                                 'language' => $this->getLanguage(),
+                                 'createdBy' => $this->getCreatedBy(),
                                  'createdDate' => $this->getCreatedDate(),
-                                 'modifiedBy' => $this->getModifiedBy()->toArray(),
+                                 'modifiedBy' => $this->getModifiedBy(),
                                  'modifiedDate' => $this->getModifiedDate()));
     }
 }

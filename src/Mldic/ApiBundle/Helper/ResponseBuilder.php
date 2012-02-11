@@ -19,7 +19,7 @@ class ResponseBuilder
     private function convertToArray($item)
     {
         if ($item instanceof ConvertibleToArray) {
-            $item = $item->toArray();
+            $item = $this->convertToArray($item->toArray());
         } elseif (is_array($item)) {
             $item = array_map(array($this, 'convertToArray'), $item);
         }
